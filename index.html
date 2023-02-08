@@ -5,28 +5,15 @@
 <body>
     <audio id="remote-audio" autoplay></audio>
     <script>
-        // Get audio element
-        const audioElement = document.getElementById("remote-audio");
+        // Connect to the audio source
+        const socket = new WebSocket("ws://" + window.location.hostname + ":8080/");
 
-        // Create peer connection
-        const peerConnection = new RTCPeerConnection();
-
-        // Handle incoming stream
-        peerConnection.ontrack = (event) => {
-            audioElement.srcObject = event.streams[0];
+        // Play incoming audio data
+        socket.onmessage = (event) => {
+            const audio = new Audio();
+            audio.src = URL.createObjectURL(new Blob([event.data], { type: "audio/mpeg" }));
+            audio.play();
         };
-
-        // Listen for incoming offers from the signaling server
-        // (code to receive offers from the signaling server would go here)
-        // When an offer is received, set it as the remote description
-        peerConnection.setRemoteDescription(new RTCSessionDescription(receivedOffer));
-
-        // Create an answer and set it as the local description
-        peerConnection.createAnswer().then((answer) => {
-            peerConnection.setLocalDescription(answer);
-            // Use a signaling server to share the answer with the transmitting client
-            // (code to send the answer to the signaling server would go here)
-        });
     </script>
 </body>
 </html>
