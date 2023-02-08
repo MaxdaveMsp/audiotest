@@ -1,20 +1,19 @@
-<!DOCTYPE html>
 <html>
-  <head>
-    <title>Audio Streaming</title>
-  </head>
-  <body>
-    <h1>Audio Streaming</h1>
-    <p>Listening to audio streaming...</p>
+<head>
+    <title>Audio Stream</title>
+</head>
+<body>
+    <audio id="remote-audio" autoplay></audio>
     <script>
-      const socket = new WebSocket('ws://localhost:8765');
+        // Connect to the audio source
+        const socket = new WebSocket("ws://" + window.location.hostname + ":8080/");
 
-      socket.addEventListener('message', event => {
-        const audio = new Blob([event.data], { type: 'audio/wav' });
-        const audioElement = new Audio();
-        audioElement.src = URL.createObjectURL(audio);
-        audioElement.play();
-      });
+        // Play incoming audio data
+        socket.onmessage = (event) => {
+            const audio = new Audio();
+            audio.src = URL.createObjectURL(new Blob([event.data], { type: "audio/mpeg" }));
+            audio.play();
+        };
     </script>
-  </body>
+</body>
 </html>
