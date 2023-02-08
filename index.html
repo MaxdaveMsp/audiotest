@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Audio Streaming</title>
+  </head>
+  <body>
+    <h1>Audio Streaming</h1>
+    <p>Listening to audio streaming...</p>
+    <script>
+      const socket = new WebSocket('ws://localhost:8765');
+
+      socket.addEventListener('message', event => {
+        const audio = new Blob([event.data], { type: 'audio/wav' });
+        const audioElement = new Audio();
+        audioElement.src = URL.createObjectURL(audio);
+        audioElement.play();
+      });
+    </script>
+  </body>
+</html>
