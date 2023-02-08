@@ -1,19 +1,17 @@
 <html>
-<head>
+  <head>
     <title>Audio Stream</title>
-</head>
-<body>
-    <audio id="remote-audio" autoplay></audio>
     <script>
-        // Connect to the audio source
-        const socket = new WebSocket("ws://" + window.location.hostname + ":8080/");
-
-        // Play incoming audio data
-        socket.onmessage = (event) => {
-            const audio = new Audio();
-            audio.src = URL.createObjectURL(new Blob([event.data], { type: "audio/mpeg" }));
-            audio.play();
-        };
+      // Get audio stream from server
+      const socket = new WebSocket("ws://192.168.86.28:5000/audio");
+      socket.binaryType = "arraybuffer";
+      const audioContext = new AudioContext();
+      const source = audioContext.createMediaStreamSource(socket);
+      source.connect(audioContext.destination);
     </script>
-</body>
+  </head>
+  <body>
+    <h1>Audio Stream</h1>
+    <p>Connected to audio stream.</p>
+  </body>
 </html>
